@@ -48,17 +48,13 @@ const listJob = async (req, res) => {
       console.log(req.body);
     
       await JobModel.findByIdAndUpdate(jobId, req.body);
+      const updatedjob=await JobModel.findById(jobId);
      
-      const findObj = {
-        company: "Google",
-      };
-      const updateObj = {
-        age: 10,
-      };
       
       res.json({
         success: true,
         message: "Job edited successfully",
+        updatedjob
       });
     } catch (err) {
       res.json({
@@ -69,17 +65,19 @@ const listJob = async (req, res) => {
   };
 
   const deleteJob = async (req, res) => {
-    const jobId = req.params.id;
-   
-    const findObj = {
-      age: 0,
-    };
-   
-    await JobModel.deleteMany(findObj); // Dangerous method (Avoid using it)
-    res.json({
-      success: true,
-      message: "Dummy Delete job api",
-    });
+    try {
+        const jobId=req.params.id;
+        await JobModel.findByIdAndDelete(jobId,req.body)
+        res.status(200).json({
+            message:"Deleted Successfully"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error:"Something went wrong"
+        })
+        
+    }
   };
   
 
